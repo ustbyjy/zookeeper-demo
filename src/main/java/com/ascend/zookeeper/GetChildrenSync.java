@@ -1,4 +1,4 @@
-package com.ascend;
+package com.ascend.zookeeper;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;

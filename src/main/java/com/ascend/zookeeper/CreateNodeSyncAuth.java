@@ -1,4 +1,4 @@
-package com.ascend;
+package com.ascend.zookeeper;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.Watcher.Event.EventType;

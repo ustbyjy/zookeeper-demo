@@ -1,4 +1,4 @@
-package com.ascend;
+package com.ascend.zookeeper;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -12,21 +12,23 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class GetDataSyncAuth implements Watcher {
-    private static Logger logger = LoggerFactory.getLogger(GetDataSyncAuth.class);
+
+public class GetDataSync implements Watcher {
+    private static Logger logger = LoggerFactory.getLogger(GetDataSync.class);
     private static ZooKeeper zooKeeper;
     private static Stat stat = new Stat();
 
     public static void main(String[] args) throws IOException {
-        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new GetDataSyncAuth());
+        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new GetDataSync());
         // 阻碍主线程退出
         System.in.read();
     }
 
     private void doSomething(ZooKeeper zooKeeper) {
-        zooKeeper.addAuthInfo("digest", "jike:123456".getBytes());
+        logger.info("doSomething");
         try {
-            logger.info("data：" + new String(zooKeeper.getData("/node_4", true, stat)));
+            logger.info("date：" + new String(GetDataSync.zooKeeper.getData("/node_4", true, stat)));
+            logger.info("stat：" + stat);
         } catch (KeeperException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -36,13 +38,14 @@ public class GetDataSyncAuth implements Watcher {
     }
 
     public void process(WatchedEvent event) {
+        logger.info("收到事件：" + event);
         if (event.getState() == KeeperState.SyncConnected) {
             if (event.getType() == EventType.None && null == event.getPath()) {
                 doSomething(zooKeeper);
             } else {
                 if (event.getType() == EventType.NodeDataChanged) {
                     try {
-                        logger.info("data：" + new String(zooKeeper.getData(event.getPath(), true, stat)));
+                        logger.info("date：" + new String(zooKeeper.getData(event.getPath(), true, stat)));
                         logger.info("stat：" + stat);
                     } catch (KeeperException e) {
                         e.printStackTrace();
@@ -51,6 +54,7 @@ public class GetDataSyncAuth implements Watcher {
                     }
                 }
             }
+
         }
     }
 

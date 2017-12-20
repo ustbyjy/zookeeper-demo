@@ -1,4 +1,4 @@
-package com.ascend;
+package com.ascend.zookeeper;
 
 import org.apache.zookeeper.*;
 import org.slf4j.Logger;

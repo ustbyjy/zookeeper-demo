@@ -1,4 +1,4 @@
-package com.ascend;
+package com.ascend.zookeeper;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -12,14 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-
-public class GetDataSync implements Watcher {
-    private static Logger logger = LoggerFactory.getLogger(GetDataSync.class);
+public class UpdateNodeSync implements Watcher {
+    private static Logger logger = LoggerFactory.getLogger(UpdateNodeSync.class);
     private static ZooKeeper zooKeeper;
-    private static Stat stat = new Stat();
 
     public static void main(String[] args) throws IOException {
-        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new GetDataSync());
+        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new UpdateNodeSync());
         // 阻碍主线程退出
         System.in.read();
     }
@@ -27,34 +25,20 @@ public class GetDataSync implements Watcher {
     private void doSomething(ZooKeeper zooKeeper) {
         logger.info("doSomething");
         try {
-            logger.info("date：" + new String(GetDataSync.zooKeeper.getData("/node_4", true, stat)));
+            Stat stat = zooKeeper.setData("/node_4", "444444".getBytes(), -1);
             logger.info("stat：" + stat);
-        } catch (KeeperException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (KeeperException e) {
+            e.printStackTrace();
         }
-
     }
 
     public void process(WatchedEvent event) {
-        logger.info("收到事件：" + event);
         if (event.getState() == KeeperState.SyncConnected) {
             if (event.getType() == EventType.None && null == event.getPath()) {
                 doSomething(zooKeeper);
-            } else {
-                if (event.getType() == EventType.NodeDataChanged) {
-                    try {
-                        logger.info("date：" + new String(zooKeeper.getData(event.getPath(), true, stat)));
-                        logger.info("stat：" + stat);
-                    } catch (KeeperException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
-
         }
     }
 

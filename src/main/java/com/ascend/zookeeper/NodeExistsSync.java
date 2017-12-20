@@ -1,6 +1,6 @@
-package com.ascend;
+package com.ascend.zookeeper;
 
-import org.apache.zookeeper.AsyncCallback;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.EventType;
@@ -12,19 +12,27 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class NodeExistsAsync implements Watcher {
-    private static Logger logger = LoggerFactory.getLogger(NodeExistsAsync.class);
+public class NodeExistsSync implements Watcher {
+    private static Logger logger = LoggerFactory.getLogger(NodeExistsSync.class);
     private static ZooKeeper zooKeeper;
 
     public static void main(String[] args) throws IOException {
-        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new NodeExistsAsync());
+        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new NodeExistsSync());
         // 阻碍主线程退出
         System.in.read();
     }
 
     private void doSomething(ZooKeeper zooKeeper) {
         logger.info("doSomething");
-        NodeExistsAsync.zooKeeper.exists("/node_1", true, new IStateCallback(), null);
+        Stat stat = null;
+        try {
+            stat = zooKeeper.exists("/node_1", true);
+            logger.info("stat：" + stat);
+        } catch (KeeperException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void process(WatchedEvent event) {
@@ -35,26 +43,20 @@ public class NodeExistsAsync implements Watcher {
                 try {
                     if (event.getType() == EventType.NodeCreated) {
                         logger.info(event.getPath() + " created");
-                        zooKeeper.exists(event.getPath(), true, new IStateCallback(), null);
+                        logger.info("stat：" + zooKeeper.exists(event.getPath(), true));
                     } else if (event.getType() == EventType.NodeDataChanged) {
                         logger.info(event.getPath() + " updated");
-                        zooKeeper.exists(event.getPath(), true, new IStateCallback(), null);
+                        logger.info("stat：" + zooKeeper.exists(event.getPath(), true));
                     } else if (event.getType() == EventType.NodeDeleted) {
                         logger.info(event.getPath() + " deleted");
-                        zooKeeper.exists(event.getPath(), true, new IStateCallback(), null);
+                        logger.info("stat：" + zooKeeper.exists(event.getPath(), true));
                     }
-                } catch (Exception e) {
+                } catch (KeeperException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }
-    }
-
-    static class IStateCallback implements AsyncCallback.StatCallback {
-        public void processResult(int rc, String path, Object ctx, Stat stat) {
-            logger.info("rc：" + rc);
-            logger.info("path：" + path);
-            logger.info("ctx：" + ctx);
         }
     }
 
