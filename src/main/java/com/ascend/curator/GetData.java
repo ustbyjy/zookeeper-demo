@@ -5,13 +5,12 @@ import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryUntilElapsed;
+import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-public class GetChildren {
-    private static Logger logger = LoggerFactory.getLogger(GetChildren.class);
+public class GetData {
+    private static Logger logger = LoggerFactory.getLogger(GetData.class);
 
     public static void main(String[] args) throws Exception {
         RetryPolicy retryPolicy = new RetryUntilElapsed(5000, 1000);
@@ -26,10 +25,10 @@ public class GetChildren {
         // 建立连接
         client.start();
 
-        List<String> children = client.getChildren()
-                .forPath("/jike");
-
-        logger.info("children：" + children);
+        Stat stat = new Stat();
+        String data = new String(client.getData().storingStatIn(stat).forPath("/node_1"));
+        logger.info("stat：" + stat);
+        logger.info("data：" + data);
 
         System.in.read();
     }

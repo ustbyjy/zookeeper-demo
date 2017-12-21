@@ -5,14 +5,15 @@ import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.ChildData;
-import org.apache.curator.framework.recipes.cache.NodeCache;
-import org.apache.curator.framework.recipes.cache.NodeCacheListener;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.RetryUntilElapsed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NodeListener {
-    private static Logger logger = LoggerFactory.getLogger(NodeListener.class);
+public class NodeChildrenListener {
+    private static Logger logger = LoggerFactory.getLogger(NodeChildrenListener.class);
 
     public static void main(String[] args) throws Exception {
 
@@ -29,14 +30,35 @@ public class NodeListener {
         // 建立连接
         client.start();
 
-        final NodeCache nodeCache = new NodeCache(client, "/jike");
-        nodeCache.start();
-        nodeCache.getListenable().addListener(new NodeCacheListener() {
-            public void nodeChanged() throws Exception {
-                ChildData currentData = nodeCache.getCurrentData();
-                logger.info("path：" + currentData.getPath());
-                logger.info("data：" + new String(currentData.getData()));
-                logger.info("stat：" + currentData.getStat());
+        final PathChildrenCache pathChildrenCache = new PathChildrenCache(client, "/jike", true);
+        pathChildrenCache.start();
+        pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
+
+            public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
+                ChildData currentData = event.getData();
+                switch (event.getType()) {
+                    case CHILD_ADDED: {
+                        logger.info("CHILD_ADDED");
+                        logger.info("path：" + currentData.getPath());
+                        logger.info("data：" + new String(currentData.getData()));
+                        logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                    case CHILD_REMOVED: {
+                        logger.info("CHILD_REMOVED");
+                        logger.info("path：" + currentData.getPath());
+                        logger.info("data：" + new String(currentData.getData()));
+                        logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                    case CHILD_UPDATED: {
+                        logger.info("CHILD_UPDATED");
+                        logger.info("path：" + currentData.getPath());
+                        logger.info("data：" + new String(currentData.getData()));
+                        logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                }
             }
         });
 

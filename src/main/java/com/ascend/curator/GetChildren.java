@@ -5,12 +5,13 @@ import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryUntilElapsed;
-import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DeleteNode {
-    private static Logger logger = LoggerFactory.getLogger(DeleteNode.class);
+import java.util.List;
+
+public class GetChildren {
+    private static Logger logger = LoggerFactory.getLogger(GetChildren.class);
 
     public static void main(String[] args) throws Exception {
         RetryPolicy retryPolicy = new RetryUntilElapsed(5000, 1000);
@@ -25,10 +26,10 @@ public class DeleteNode {
         // 建立连接
         client.start();
 
-        client.delete()
-                .deletingChildrenIfNeeded()
-                .withVersion(-1)
+        List<String> children = client.getChildren()
                 .forPath("/jike");
+
+        logger.info("children：" + children);
 
         System.in.read();
     }

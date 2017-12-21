@@ -9,8 +9,8 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GetData {
-    private static Logger logger = LoggerFactory.getLogger(GetData.class);
+public class UpdateData {
+    private static Logger logger = LoggerFactory.getLogger(UpdateData.class);
 
     public static void main(String[] args) throws Exception {
         RetryPolicy retryPolicy = new RetryUntilElapsed(5000, 1000);
@@ -25,10 +25,11 @@ public class GetData {
         // 建立连接
         client.start();
 
-        Stat stat = new Stat();
-        String data = new String(client.getData().storingStatIn(stat).forPath("/node_1"));
+        Stat stat = client.setData()
+                .withVersion(-1)
+                .forPath("/jike", "123".getBytes());
+
         logger.info("stat：" + stat);
-        logger.info("data：" + data);
 
         System.in.read();
     }
