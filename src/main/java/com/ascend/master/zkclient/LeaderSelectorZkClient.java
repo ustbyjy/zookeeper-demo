@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.ascend.zkclient;
+package com.ascend.master.zkclient;
 
 
 import com.ascend.util.PropertiesUtil;

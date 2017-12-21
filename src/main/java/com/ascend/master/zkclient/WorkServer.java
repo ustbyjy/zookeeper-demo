@@ -1,4 +1,4 @@
-package com.ascend.zkclient;
+package com.ascend.master.zkclient;
 
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;

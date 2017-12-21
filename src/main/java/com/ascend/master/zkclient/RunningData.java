@@ -1,4 +1,4 @@
-package com.ascend.zkclient;
+package com.ascend.master.zkclient;
 
 import java.io.Serializable;
 
