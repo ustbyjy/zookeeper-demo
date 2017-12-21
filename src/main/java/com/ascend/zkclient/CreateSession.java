@@ -1,5 +1,6 @@
 package com.ascend.zkclient;
 
+import com.ascend.util.PropertiesUtil;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
 import org.apache.zookeeper.CreateMode;
@@ -10,7 +11,7 @@ public class CreateSession {
     private static Logger logger = LoggerFactory.getLogger(CreateSession.class);
 
     public static void main(String[] args) {
-        ZkClient zkClient = new ZkClient("10.236.40.159:2181", 10000, 10000, new SerializableSerializer());
+        ZkClient zkClient = new ZkClient(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), PropertiesUtil.getIntValue("connectionTimeout"), new SerializableSerializer());
         logger.info("connect ok！");
 
         User user = new User(1, "test");

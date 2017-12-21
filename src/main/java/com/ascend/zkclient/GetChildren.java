@@ -1,5 +1,6 @@
 package com.ascend.zkclient;
 
+import com.ascend.util.PropertiesUtil;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ public class GetChildren {
     private static Logger logger = LoggerFactory.getLogger(GetChildren.class);
 
     public static void main(String[] args) {
-        ZkClient zkClient = new ZkClient("10.236.40.159:2181", 10000, 10000, new SerializableSerializer());
+        ZkClient zkClient = new ZkClient(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), PropertiesUtil.getIntValue("connectionTimeout"), new SerializableSerializer());
         logger.info("connect ok！");
 
         List<String> children = zkClient.getChildren("/node_1");
