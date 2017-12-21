@@ -1,5 +1,6 @@
 package com.ascend.zookeeper;
 
+import com.ascend.util.PropertiesUtil;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -13,7 +14,7 @@ public class CreateSession implements Watcher {
     private static ZooKeeper zooKeeper;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new CreateSession());
+        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new CreateNodeAsync());
         // 异步建立连接，所以状态为CONNECTING
         logger.info("state：" + zooKeeper.getState());
         Thread.sleep(3000);

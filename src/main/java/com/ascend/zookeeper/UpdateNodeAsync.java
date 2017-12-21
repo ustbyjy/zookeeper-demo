@@ -1,5 +1,6 @@
 package com.ascend.zookeeper;
 
+import com.ascend.util.PropertiesUtil;
 import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -17,7 +18,7 @@ public class UpdateNodeAsync implements Watcher {
     private static ZooKeeper zooKeeper;
 
     public static void main(String[] args) throws IOException {
-        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new UpdateNodeAsync());
+        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new CreateNodeAsync());
         // 阻碍主线程退出
         System.in.read();
     }

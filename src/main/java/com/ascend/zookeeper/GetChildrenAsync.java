@@ -1,5 +1,6 @@
 package com.ascend.zookeeper;
 
+import com.ascend.util.PropertiesUtil;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ public class GetChildrenAsync implements Watcher {
     private static ZooKeeper zooKeeper;
 
     public static void main(String[] args) throws IOException {
-        zooKeeper = new ZooKeeper("10.236.40.159:2181", 5000, new GetChildrenAsync());
+        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new CreateNodeAsync());
         // 阻碍主线程退出
         System.in.read();
     }
