@@ -18,7 +18,7 @@ public class UpdateNodeSync implements Watcher {
     private static ZooKeeper zooKeeper;
 
     public static void main(String[] args) throws IOException {
-        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new CreateNodeAsync());
+        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new UpdateNodeSync());
         // 阻碍主线程退出
         System.in.read();
     }

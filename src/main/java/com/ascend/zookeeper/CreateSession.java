@@ -14,7 +14,7 @@ public class CreateSession implements Watcher {
     private static ZooKeeper zooKeeper;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new CreateNodeAsync());
+        zooKeeper = new ZooKeeper(PropertiesUtil.getStringValue("connectString"), PropertiesUtil.getIntValue("sessionTimeout"), new CreateSession());
         // 异步建立连接，所以状态为CONNECTING
         logger.info("state：" + zooKeeper.getState());
         Thread.sleep(3000);
