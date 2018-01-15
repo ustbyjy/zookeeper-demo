@@ -4,6 +4,8 @@ import com.ascend.util.PropertiesUtil;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
 import org.apache.curator.retry.RetryUntilElapsed;
 import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
@@ -32,6 +34,14 @@ public class CreateNode {
                 .forPath("/jike/1/11/111", "123".getBytes());
 
         logger.info("return path：" + path);
+
+        final NodeCache nodeCache = new NodeCache(client, "/jike/1/11/111");
+        nodeCache.start();
+        nodeCache.getListenable().addListener(new NodeCacheListener() {
+            public void nodeChanged() throws Exception {
+                logger.info("node created");
+            }
+        });
 
         System.in.read();
     }
