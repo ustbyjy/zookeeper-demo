@@ -33,7 +33,6 @@ public class NodeChildrenListener {
         final PathChildrenCache pathChildrenCache = new PathChildrenCache(client, "/jike", true);
         pathChildrenCache.start();
         pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
-
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 ChildData currentData = event.getData();
                 switch (event.getType()) {
@@ -53,6 +52,27 @@ public class NodeChildrenListener {
                     }
                     case CHILD_UPDATED: {
                         logger.info("CHILD_UPDATED");
+                        logger.info("path：" + currentData.getPath());
+                        logger.info("data：" + new String(currentData.getData()));
+                        logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                    case CONNECTION_SUSPENDED: {
+                        logger.info("CONNECTION_SUSPENDED");
+                        logger.info("path：" + currentData.getPath());
+                        logger.info("data：" + new String(currentData.getData()));
+                        logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                    case CONNECTION_RECONNECTED: {
+                        logger.info("CONNECTION_RECONNECTED");
+                        logger.info("path：" + currentData.getPath());
+                        logger.info("data：" + new String(currentData.getData()));
+                        logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                    case CONNECTION_LOST: {
+                        logger.info("CONNECTION_LOST");
                         logger.info("path：" + currentData.getPath());
                         logger.info("data：" + new String(currentData.getData()));
                         logger.info("stat：" + currentData.getStat());
