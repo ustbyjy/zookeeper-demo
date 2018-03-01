@@ -12,6 +12,8 @@ import org.apache.curator.retry.RetryUntilElapsed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 public class NodeChildrenListener {
     private static Logger logger = LoggerFactory.getLogger(NodeChildrenListener.class);
 
@@ -56,6 +58,14 @@ public class NodeChildrenListener {
                         logger.info("path：" + currentData.getPath());
                         logger.info("data：" + new String(currentData.getData()));
                         logger.info("stat：" + currentData.getStat());
+                        break;
+                    }
+                    case CONNECTION_RECONNECTED: {
+                        logger.info("CONNECTION_RECONNECTED");
+                        break;
+                    }
+                    case CONNECTION_SUSPENDED:{
+                        logger.info("CONNECTION_SUSPENDED");
                         break;
                     }
                 }
