@@ -12,8 +12,6 @@ import org.apache.curator.retry.RetryUntilElapsed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.TimeUnit;
-
 public class NodeChildrenListener {
     private static Logger logger = LoggerFactory.getLogger(NodeChildrenListener.class);
 
@@ -35,7 +33,6 @@ public class NodeChildrenListener {
         final PathChildrenCache pathChildrenCache = new PathChildrenCache(client, "/jike", true);
         pathChildrenCache.start();
         pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
-
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 ChildData currentData = event.getData();
                 switch (event.getType()) {
@@ -64,8 +61,12 @@ public class NodeChildrenListener {
                         logger.info("CONNECTION_RECONNECTED");
                         break;
                     }
-                    case CONNECTION_SUSPENDED:{
+                    case CONNECTION_SUSPENDED: {
                         logger.info("CONNECTION_SUSPENDED");
+                        break;
+                    }
+                    case CONNECTION_LOST: {
+                        logger.info("CONNECTION_LOST");
                         break;
                     }
                 }
