@@ -9,6 +9,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.RetryUntilElapsed;
+import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,11 @@ public class NodeChildrenListener {
                 }
             }
         });
+
+//        client.create()
+//                .creatingParentsIfNeeded()
+//                .withMode(CreateMode.EPHEMERAL)
+//                .forPath("/jike/1", "init".getBytes());
 
         System.in.read();
     }
