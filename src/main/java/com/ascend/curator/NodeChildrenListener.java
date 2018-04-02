@@ -9,12 +9,13 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.RetryUntilElapsed;
-import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NodeChildrenListener {
     private static Logger logger = LoggerFactory.getLogger(NodeChildrenListener.class);
+
+    private static Long startTime = null;
 
     public static void main(String[] args) throws Exception {
 
@@ -31,10 +32,13 @@ public class NodeChildrenListener {
         // 建立连接
         client.start();
 
+        startTime = System.currentTimeMillis();
+
         final PathChildrenCache pathChildrenCache = new PathChildrenCache(client, "/jike", true);
         pathChildrenCache.start();
         pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
+                logger.info("isConnected：" + client.getZookeeperClient().isConnected());
                 ChildData currentData = event.getData();
                 switch (event.getType()) {
                     case CHILD_ADDED: {
@@ -42,6 +46,9 @@ public class NodeChildrenListener {
                         logger.info("path：" + currentData.getPath());
                         logger.info("data：" + new String(currentData.getData()));
                         logger.info("stat：" + currentData.getStat());
+                        if (startTime > currentData.getStat().getCtime()) {
+                            logger.info("过期的节点");
+                        }
                         break;
                     }
                     case CHILD_REMOVED: {
