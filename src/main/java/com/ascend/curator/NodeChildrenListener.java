@@ -48,6 +48,7 @@ public class NodeChildrenListener {
                         logger.info("stat：" + currentData.getStat());
                         if (startTime > currentData.getStat().getCtime()) {
                             logger.info("过期的节点");
+                            break;
                         }
                         break;
                     }
