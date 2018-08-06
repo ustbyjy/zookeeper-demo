@@ -15,6 +15,8 @@
         <zookeeper.version>3.4.11</zookeeper.version>
         <zkclient.version>0.10</zkclient.version>
         <curator.version>4.0.0</curator.version>
+        <curator-test.version>2.12.0</curator-test.version>
+        <guava.version>20.0</guava.version>
         <fastjson.version>1.2.43</fastjson.version>
     </properties>
 
@@ -70,6 +72,26 @@
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
             <version>${curator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-test</artifactId>
+            <version>${curator-test.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>zookeeper</artifactId>
+                    <groupId>org.apache.zookeeper</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
